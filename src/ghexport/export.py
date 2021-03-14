@@ -3,7 +3,28 @@ import argparse
 import json
 from typing import NamedTuple, List, Any
 
-from github import Github
+import httpx
+import requests
+
+from github import Github, GithubException # type: ignore
+from github.Requester import RequestsResponse, HTTPSRequestsConnectionClass, Requester
+
+class HttpxConnectionClass(HTTPSRequestsConnectionClass):
+
+    def getresponse(self):
+        verb = getattr(httpx, self.verb.lower())
+        url = "%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url)
+        if self.verb.lower() == 'get':
+            r = verb(url, headers=self.headers)
+        else:  # for post requests
+            r = verb(
+                url,
+                headers=self.headers,
+                data=self.input,
+            )
+        return RequestsResponse(r)
+
+Requester._Requester__httpsConnectionClass = HttpxConnectionClass
 
 
 from .exporthelpers.export_helper import Json
