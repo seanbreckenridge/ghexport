@@ -2,6 +2,8 @@
 import ghexport.export as E; return E.make_parser().prog
 #+end_src
 
+NOTE: You shouldn't need to use this -- you can use upstream. If you have issues with getting upstream to work, make sure you don't have a .netrc in your home directory
+
 #+RESULTS:
 :results:
 Export your Github personal data: issues, PRs, comments, followers and followings, etc.
